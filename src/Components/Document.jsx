@@ -1,107 +1,105 @@
-import React,{useEffect,useState} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
-
+import { RxCross1 } from 'react-icons/rx'
 import { ToastContainer, toast } from "react-toastify";
+import Input from './Input'
+import Select from './Select'
 function Document() {
-  const [userdata, setuserdata] = useState({
-
-  })
-  const navigate = useNavigate()
-  const  getuserdata=async()=>{
-    if(!localStorage.getItem('token'))
+  const [userinfo, setuserinfo] = useState(
     {
-      navigate('/')
-    }
-    try {
-      let response = await fetch(`http://localhost:5000/api/getinfo`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "token": localStorage.getItem('token')
-        },
-      
-      });
-      const jsonfile = await response.json();
-      console.log(jsonfile);
-      if (jsonfile.success === false) {
-        toast.error(jsonfile.errors, {
-          position: "top-right",
-          className: "font-bold text-xl",
-          autoClose: 3000,
-          style: {
-            backgroundColor: "white",
-            color: "rgb(92, 92, 92)",
-            fontSize: "10px",
-          },
-        });
-        localStorage.clear();
-        setTimeout(() => {
-          navigate('/')
-        },5000);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("something went wrong", {
-        position: "top-right",
-        className: "font-bold text-xl",
-        autoClose: 3000,
-        style: {
-          backgroundColor: "white",
-          color: "rgb(92, 92, 92)",
-          fontSize: "10px",
-        },
-      });
-      localStorage.clear();
-      setTimeout(() => {
-        navigate('/')
-      },5000);
-    }
-  } 
-   useEffect(() => {
-    
-    
+      firstname: "",
+      lastname: "",
+      dob: "",
 
-    
-   }, [ ])
-   
-  
+      mobile: 0,
+      email: "",
+
+      profilephoto: "",
+      address: "",
+      pincode: "",
+      course: "",
+      department: "",
+      section: "",
+      year:"",
+      Rollno: "",
+      idcard: "",
+      Certificate: "",
+
+      Achievement: ""
+    }
+  )
+  const handleInputChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setuserinfo((prevCarInfo) => ({
+        ...prevCarInfo,
+        [name]: value,
+      }));
+
+    },
+
+
+    [userinfo]
+  )
+  const navigate=useNavigate();
+
   return (
-    <div>
-        <h3 className='text-xl font-semibold'>Document Type</h3>
-        <a className='# text-sm ' href='#'  >View Document</a>
-        {/* <div className="flex  p-2 border-2 border-t-0 border-x-0 flex-col items-center gap-4 md:flex-row lg:gap-6">
-        <a
-          href="#"
-          className="group relative block  shrink-0 self-start overflow-hidden rounded-lg bg-gray-100 shadow-lg h-16 md:w-24"
-        >
-          <img
-            src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600"
-            loading="lazy"
-            alt="Photo by Minh Pham"
-            className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
-          />
-        </a>
-        <div className="flex flex-col gap-2">
-          
-          <h2 className="text-xl font-bold text-gray-800">
-            <a
-              href="#"
-              className="transition duration-100 hover:text-indigo-500 active:text-indigo-600"
-            >
-              New trends in Tech
-            </a>
-          </h2>
-          <div>
-            <a
-              href="#"
-              className="font-semibold text-indigo-500 transition duration-100 hover:text-indigo-600 active:text-indigo-700"
-            >
-              View Document
-            </a>
+    <div className='z-20  bg-white absolute   min-h-screen transition-all duration-300'>
+      <h1 className='flex items-center justify-end  w-[95%] mx-auto mt-5 gap-x-4 '>
+        <button className='bg-transparent font-bold  border-blue-200 hover:scale-90 hover:bg-blue-300 hover:text-black cursor-pointer  border-2 px-3  py-1 rounded-xl '
+        > Submit
+        </button>
+        <RxCross1 size={20}   />
+      </h1>
+      <h1 className='  mx-auto px-8 md:px-0 md:w-[70%] font-bold text-start text-xl md:text-3xl'>Basic Details</h1>
+      <div className='flex flex-col md:flex-row   md:justify-between px-4  md:p-8 items-start '>
+
+        <div className=' mx-auto md:basis-[70%]  md:px-6 '>
+          <div className='flex flex-col md:flex-row justify-center  gap-2 md:gap-6'>
+            <Input label='Firstname' value={userinfo.firstname} type='text' name='firstname' onchange={handleInputChange} />
+            <Input label='Lastname' value={userinfo.lastname} type='text' name='lastname' onchange={handleInputChange} />
+            {/* <Select label='Make' value={carinfo.lastname} name='brandname' optiondata={Brand} onchange={handleInputChange} enableoption={true} /> */}
           </div>
+          
+          <div className='flex flex-col md:flex-row justify-center  gap-2 md:gap-6'>
+            <Input label='Dob' value={userinfo.dob} type="date"name='dob' onchange={handleInputChange} />
+            <Input label='Lastname' value={userinfo.lastname} type='text' name='lastname' onchange={handleInputChange} />
+            {/* <Select label='Make' value={carinfo.lastname} name='brandname' optiondata={Brand} onchange={handleInputChange} enableoption={true} /> */}
+          </div>
+          <div className='flex flex-col md:flex-row justify-center  gap-2 md:gap-6'>
+            <Select label='Course' value={userinfo.lastname} name='course' optiondata={[
+              "BTech","BCA","BBA"
+            ]} onchange={handleInputChange} enableoption={false} />
+            <Select label='Department' value={userinfo.department} name='department' optiondata={['ECE',"CSE","CSE_AIML","CSE_DS","ME","ASH"]} onchange={handleInputChange} enableoption={false} />
+            {/* <Input label='Email' name='email' value={userinfo.email} type='email' onchange={handleInputChange} /> */}
+          </div>
+          <div className='flex flex-col md:flex-row justify-center  gap-2 md:gap-6'>
+            {/* <Select label='Body' optiondata={Category} name='Body' value={carinfo.Body} onchange={handleInputChange} /> */}
+            <Input label='Address' name='address' classname={'w-[44rem] md:w-[50rem]'}classnamelabel={'w-[44rem] md:w-[50rem]'}  value={userinfo.address} onchange={handleInputChange} />
+
+
+          </div>
+          {/* <div className='flex flex-col md:flex-row justify-center  gap-2 md:gap-6'>
+            <Select label='Rent/Sell' name='RentorSell' optiondata={[{ brandname: "Rent" }, { brandname: "Sell" }]} value={carinfo.RentorSell} onchange={handleInputChange} />
+            <Input label='Seating' type='number' name='seating' value={carinfo.seating} onchange={handleInputChange} />
+          </div> */}
+
+        </div>
+        <div className='md:basis-[30%] md:px-10'>
+          <h1 className='text-black  pb-3 mb-1 border-b border-neutral-500 font-bold text-xl'> Safety recall terms</h1>
+          <h1 className='text-neutral-500 p-2  text-sm md:text-base my-1 '>
+          In light of recent security assessments, we regret to announce a safety recall for the Digilocker website utilized for academic purposes. Users are urged to refrain from accessing the site until further notice due to identified vulnerabilities that may compromise data security. Our team is actively working to address these issues and ensure the safety of user data. Please stay tuned for updates on the website's restoration. Your cooperation is crucial, and we apologize for any inconvenience caused. Thank you for prioritizing your safety and security.
+          </h1>
+          <h1 className='text-black  pb-3 mb-1 border-b border-neutral-500 font-bold text-xl'> Need support?</h1>
+          <h1 className='text-neutral-500 p-2  text-sm md:text-base my-1 '>
+            Have questions or need assistance? We’re here to help.
+
+            Contact us
+            <a href="" className='block text-blue-500'>support@Collegedigi.com</a>
+          </h1>
         </div>
       </div>
-    </div> */}
+
     </div>
   )
 }

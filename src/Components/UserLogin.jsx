@@ -39,37 +39,40 @@ function UserLogin() {
           usertype: usertype,
         }),
       });
-      const jsonfile = await response.json();
+      const jsonfile = await response.json().then((data)=>{
+        if (data.success==true) {
+          toast.success("Login successfully", {
+            position: "top-right",
+            className: "font-bold text-xl",
+            autoClose: 3000,
+            style: {
+              backgroundColor: "white",
+              color: "rgb(92, 92, 92)",
+              fontSize: "10px",
+            },
+          });
+          localStorage.setItem('token',data.token)
+          localStorage.setItem("id",data.id)
+          setTimeout(() => {
+            navigate('/userDashboard')
+          },5000);
+        }
+        if (jsonfile.success === false) {
+          toast.error(jsonfile.errors, {
+            position: "top-right",
+            className: "font-bold text-xl",
+            autoClose: 3000,
+            style: {
+              backgroundColor: "white",
+              color: "rgb(92, 92, 92)",
+              fontSize: "10px",
+            },
+          });
+        }
+        
+      });
       console.log(jsonfile);
-      if (jsonfile.success) {
-        toast.success("Login successfully", {
-          position: "top-right",
-          className: "font-bold text-xl",
-          autoClose: 3000,
-          style: {
-            backgroundColor: "white",
-            color: "rgb(92, 92, 92)",
-            fontSize: "10px",
-          },
-        });
-        localStorage.setItem('token',jsonfile.token)
-        localStorage.setItem("id",jsonfile.id)
-        setTimeout(() => {
-          navigate('/userDashboard')
-        },5000);
-      }
-      if (jsonfile.success === false) {
-        toast.error(jsonfile.errors, {
-          position: "top-right",
-          className: "font-bold text-xl",
-          autoClose: 3000,
-          style: {
-            backgroundColor: "white",
-            color: "rgb(92, 92, 92)",
-            fontSize: "10px",
-          },
-        });
-      }
+      
     } catch (error) {
       console.log(error);
       toast.error("something went wrong", {
